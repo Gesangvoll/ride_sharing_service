@@ -25,12 +25,16 @@ SECRET_KEY = '0=q$btft#zxq*@9l7c-3uqkzv!8hv0_+7%-1#nz=j!%ev=+p@-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'vcm-8138.vm.duke.edu',
+]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'login.apps.LoginConfig',
+    'ride.apps.RideConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -88,6 +92,9 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
+AUTH_USER_MODEL = 'login.User'
+
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -109,7 +116,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/New_York'
 
 USE_I18N = True
 
