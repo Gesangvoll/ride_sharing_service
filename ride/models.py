@@ -21,15 +21,16 @@ class SharerRequest(models.Model):
     passenger_num = models.IntegerField
 
 
-class Vehicle(models.Model):
-    class Type(Enum):
-        SEDAN = 'sedan'
-        SUV = 'suv'
-        COUPE = 'coupe'
-        VAN = 'van'
-        HYPER = 'hyper'
+class VehicleType(Enum):
+    SE = 'sedan'
+    SUV = 'suv'
+    CO = 'coupe'
+    VA = 'van'
+    HY = 'hyper'
 
+
+class Vehicle(models.Model):
     plate_number = models.ForeignKey(User, on_delete=models.CASCADE, primary_key=True)
-    type = models.CharField(max_length=6, choices=[(type, type.value) for type in Type])
+    type = models.CharField(max_length=6, choices=[(type, type.value) for type in VehicleType])
 
 
