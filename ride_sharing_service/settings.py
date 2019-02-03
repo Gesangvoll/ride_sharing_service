@@ -132,3 +132,4 @@ USE_TZ = True
 STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = 'ride:home'
 LOGOUT_REDIRECT_URL = 'welcome'
+LOGIN_URL = 'login'

@@ -4,14 +4,16 @@ from enum import Enum
 from django.utils import timezone
 # Create your models here.
 
+
 class OrderStatus(Enum):
     OP = 'open'
     CON = 'confirmed'
     COM = 'completed'
 
+
 class OwnerRequest(models.Model):
 
-    owner_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     is_sharable = models.BooleanField
     status = models.CharField( max_length=10, choices=[(status, status.value) for status in OrderStatus])
     destination = models.CharField(max_length=200)
@@ -22,8 +24,8 @@ class OwnerRequest(models.Model):
 
 
 class SharerRequest(models.Model):
-    sharer_id = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    owner_request_id = models.ForeignKey(OwnerRequest, on_delete=models.CASCADE)
+    sharer = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    owner_request = models.ForeignKey(OwnerRequest, on_delete=models.CASCADE)
     earliest_time = models.DateTimeField(blank=True, null=True)
     created_date = models.DateTimeField('Create Date', default=timezone.now)
     latest_time = models.DateTimeField(blank=True, null=True)
