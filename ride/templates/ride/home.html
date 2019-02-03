@@ -1,0 +1,20 @@
+<!-- ride/templates/ride/home.html -->
+
+{% extends 'ride/base.html' %}
+
+{% block title %}HOmeeeeeeeeeee {% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+  Hi {{ user.username }}
+    <p><a href="{% url 'ride:view_requests'  %}">View My Requests</a></p>
+    <p><a href="{% url 'ride:request_new' %}">Request a Ride</a></p>
+    <p><a href="{% url 'ride:driver_home' %}">Driver Entrance</a></p>
+    <p><a href="{% url 'ride:sharer_request_new' %}"></a></p>
+    <p><a href="{% url 'logout' %}">Logout</a></p>
+{% else %}
+  <p>Welcome to CJ & XY's Ride Sharing Service!</p>
+  <a href="{% url 'login' %}">login</a> |
+  <a href="{% url 'login:signup' %}">signup</a>
+{% endif %}
+{% endblock %}

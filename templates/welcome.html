@@ -1,4 +1,4 @@
-<!-- templates/home.html -->
+<!-- templates/welcome.html -->
 {% extends 'base.html' %}
 
 {% block title %}Home{% endblock %}
@@ -8,8 +8,8 @@
   Hi {{ user.username }}!
   <p><a href="{% url 'logout' %}">logout</a></p>
 {% else %}
-  <p>You are not logged in</p>
+  <p>Welcome to CJ & XY's Ride Sharing Service!</p>
   <a href="{% url 'login' %}">login</a> |
-  <a href="{% url 'signup' %}">signup</a>
+  <a href="{% url 'login:signup' %}">signup</a>
 {% endif %}
 {% endblock %}
