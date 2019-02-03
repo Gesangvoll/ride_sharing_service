@@ -18,16 +18,16 @@ class ViewRequests(LoginRequiredMixin, generic.ListView):
     template_name = 'ride/view_requests.html'
     context_object_name = 'view_requests_list'
 
-    @login_required
-    def get_queryset(self):
-        return OwnerRequest.objects.filter(owner_id__exact=self.request.user, status=OrderStatus.OP)
 
-    @login_required
+    def get_queryset(self):
+        return OwnerRequest.objects.filter(owner__exact=self.request.user, status=OrderStatus.OP)
+
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'sharer_requests_list': SharerRequest.objects.filter(sharer_id__exact=self.request.user).
-                exclude(owner_request_id__status__exact=OrderStatus.COM),
+            'sharer_requests_list': SharerRequest.objects.filter(sharer__exact=self.request.user).
+                exclude(owner_request__status__exact=OrderStatus.COM),
         })
         return context
 
