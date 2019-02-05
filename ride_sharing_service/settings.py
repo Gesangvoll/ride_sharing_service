@@ -33,6 +33,8 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'bootstrap4',
+    'bootstrap_datepicker_plus',
     'login.apps.LoginConfig',
     'ride.apps.RideConfig',
     'django.contrib.admin',
@@ -133,3 +135,7 @@ STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = 'ride:home'
 LOGOUT_REDIRECT_URL = 'welcome'
 LOGIN_URL = 'login'
+
+BOOTSTRAP4 = {
+    'include_jquery': True,
+}

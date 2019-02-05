@@ -1,22 +1,25 @@
 {% extends 'ride/base.html' %}
 
 {% block title %}My Requests {% endblock %}
-
+{% block extrahead %}   {# Extra Resources Start #}
+   {{ form.media }}        {# Form required JS and CSS #}
+{% endblock %}
 {% block content %}
 {% if view_requests_list %}
+    <h2>Your Owner Requests: </h2>
   {% for request in view_requests_list %}
-      <p><a href="home.html">{{ request.id }}</a></p>
+      <p><a href="{% url 'ride:owner_request_detail' request.id  %}">{{ request.id }}</a></p>
   {% endfor %}
 {% else %}
-    <p>No Owner Requests Here!</p>
-
+    <h2>No Owner Requests Here!</h2>
 {% endif %}
 {% if sharer_requests_list %}
+    <h2>Your Share Requests</h2>
     {% for request in sharer_requests_list %}
-        <p><a href="home.html">{{ request.id }}</a></p>
+        <p><a href="{% url 'ride:sharer_request_detail' request.id %}">{{ request.id }}</a></p>
     {% endfor %}
 {% else %}
-    <p>No Sharer Requests Here!</p>
-    <p><a href="home.html">Home</a></p>
+    <h2>No Sharer Requests Here!</h2>
+    <p><a href="{% url 'ride:home'  %}">Home</a></p>
 {% endif %}
 {% endblock %}

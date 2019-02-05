@@ -1,0 +1,32 @@
+{% extends 'ride/base.html' %}
+
+{% block content %}
+  <h1>Request Detail</h1>
+  {% if request %}
+  <ul>
+       <li><a>Creation Date: {{request.created_date}}</a></li>
+       <li><a>Ride Status: {{request.status}}</a></li>
+{#       {% if driver_info %}#}
+{#       <li><a>Driver: {{driver_info.user}}</a></li>#}
+{#       <li><a>Vehicle: {{driver_info.type}}</a></li>#}
+{#       <li><a>Vehicle Plate Number: {{driver_info.plate_number}}</a></li>#}
+{#       {% endif %}#}
+       <li><a>Destination: {{request.destination}}</a></li>
+       <li><a>Special Car Info: {{request.special_vehicle_info}}</a></li>
+       <li><a>Total Passenger Number: {{request.total_passenger}}</a></li>
+       <li><a>Passenger Number:{{request.passenger_num}}</a></li>
+        <li><a>Expected Arrival Time:{{ request.arrival_time}}</a></li>
+{#       {% for share_request in share_request%}#}
+{#       <li><a>Sharer: {{ share_request.sharer}} Passenger Number: {{share_request.passenger_num}}</a></li>#}
+{#       {% endfor %}#}
+       {% if request.status == 'open' and request.status != 'shared'%}
+       <a href="{% url 'ride:owner_request_edit' request.id %}  " style="color: #888" ><u>Edit</u></a>
+       {% else %}
+           <p>Your Request Could Not Be Edited At This Time!</p>
+       {% endif %}
+        <a href="{% url 'ride:view_requests' %}">Return Requests List</a>
+  </ul>
+  {% else %}
+    <p>There is no required order.</p>
+  {% endif %}       
+{% endblock %}

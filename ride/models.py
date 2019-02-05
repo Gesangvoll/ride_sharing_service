@@ -1,26 +1,25 @@
 from django.db import models
 from login.models import User
-from enum import Enum
 from django.utils import timezone
+from model_utils import Choices
 # Create your models here.
 
-
-class OrderStatus(Enum):
-    OP = 'open'
-    CON = 'confirmed'
-    COM = 'completed'
+STATUS = Choices('open', 'shared','confirmed', 'completed')
+TYPE = Choices('sedan', 'suv', 'coupe', 'van', 'hyper')
 
 
 class OwnerRequest(models.Model):
-
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    is_sharable = models.BooleanField
-    status = models.CharField( max_length=10, choices=[(status, status.value) for status in OrderStatus])
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owner_owner_request_set')
+    is_sharable = models.BooleanField(default=False, blank=False)
+    status = models.CharField( max_length=10, choices=STATUS, default='open')
     destination = models.CharField(max_length=200)
     passenger_num = models.IntegerField(default=1)
     total_passenger = models.IntegerField(default=1)
+    vehicle_type = models.CharField(max_length=6, choices=TYPE)
+    driver = models.OneToOneField(User, on_delete=models.CASCADE, related_name='driver_owner_request_set', blank=True, null=True)
     created_date = models.DateTimeField('Create Date', default=timezone.now)
-    arrival_time = models.DateTimeField(blank=True, null=True)
+    arrival_time = models.DateTimeField(blank=True, null=True, default=timezone.now())
+    special_vehicle_info = models.TextField(blank=True, null=True)
 
 
 class SharerRequest(models.Model):
@@ -32,16 +31,10 @@ class SharerRequest(models.Model):
     passenger_num = models.IntegerField(default=1)
 
 
-class VehicleType(Enum):
-    SE = 'sedan'
-    SUV = 'suv'
-    CO = 'coupe'
-    VA = 'van'
-    HY = 'hyper'
-
-
 class Vehicle(models.Model):
     plate_number = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    type = models.CharField(max_length=6, choices=[(type, type.value) for type in VehicleType])
+    volume = models.IntegerField(null=False, blank=False)
+    type = models.CharField(max_length=6, choices=TYPE)
+    special_vehicle_info = models.TextField(blank=True, null=True)
 
 

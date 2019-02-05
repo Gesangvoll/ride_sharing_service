@@ -1,0 +1,9 @@
+{% block title %}Driver Home {% endblock %}
+
+{% block content %}
+    <p><a href="{% url 'ride:view_requests'  %}">View My Requests</a></p>
+    <p><a href="{% url 'ride:request_new' %}">Request a Ride</a></p>
+    <p><a href="{% url 'ride:driver_home' %}">Driver Entrance</a></p>
+    <p><a href="{% url 'ride:sharer_request_new' %}">Share a Ride</a></p>
+    <p><a href="{% url 'logout' %}">Logout</a></p>
+{% endblock %}
