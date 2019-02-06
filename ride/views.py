@@ -312,6 +312,10 @@ class MySharerRequestDetailView(LoginRequiredMixin, generic.DetailView):
     template_name = 'ride/request_detail.html'
     context_object_name = 'request'
 
+    def get_object(self, queryset=None):
+        owner_request = SharerRequest.objects.get(pk=self.kwargs['pk']).owner_request
+        return owner_request
+
 
 @login_required
 def sharer_join(request, owner_request_id, passenger_num):
