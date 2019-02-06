@@ -34,9 +34,11 @@ class ViewRequests(LoginRequiredMixin, generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        clicker = 'owner'
         context.update({
             'sharer_requests_list': SharerRequest.objects.filter(sharer__exact=self.request.user).
                 exclude(owner_request__status__exact='completed'),
+            'clicker':clicker
         })
         return context
 
@@ -105,33 +107,34 @@ class OwnerRequestEditView(LoginRequiredMixin, generic.UpdateView):
             return super().form_valid(form)
 
 
-# class SharerRequestEditView(LoginRequiredMixin, generic.UpdateView):
-#     """
-#     Edit Sharer Request
-#
-#     """
-#     model = SharerRequest
-#     template_name = 'ride/request_edit.html'
-#     form_class = RequestSharerForm
-#     success_url = reverse_lazy('ride:view_requests')
-#
-#     def form_invalid(self, form):
-#         print("form is invalid")
-#         return HttpResponse("form is invalid.. this is just an HttpResponse object")
-#
-#     def form_valid(self, form):
-#         pk = self.kwargs.get('pk')
-#         request = get_object_or_404(OwnerRequest, pk=pk)
-#         if request.status == 'open':
-#             request.is_sharable = form.cleaned_data['is_sharable']
-#             request.passenger_num = form.cleaned_data['passenger_num']
-#             request.destination = form.cleaned_data['destination']
-#             request.special_vehicle_info = form.cleaned_data['special_vehicle_info']
-#             request.arrival_time = form.cleaned_data['arrival_time']
-#             request.vehicle_type = form.cleaned_data['vehicle_type']
-#             request.total_passenger = request.passenger_num
-#             request.save()
-#             return super().form_valid(form)
+
+class SharerRequestEditView(LoginRequiredMixin, generic.UpdateView):
+    """
+    Edit Sharer Request
+    in view_requests
+    """
+    model = SharerRequest
+    template_name = 'ride/request_edit.html'
+    form_class = SharerRequestForm
+    success_url = reverse_lazy('ride:view_requests')
+
+    def form_invalid(self, form):
+        print("form is invalid")
+        return HttpResponse("form is invalid.. this is just an HttpResponse object")
+
+    def form_valid(self, form):
+        pk = self.kwargs.get('pk')
+        request = get_object_or_404(OwnerRequest, pk=pk)
+        if request.status == 'open':
+            request.is_sharable = form.cleaned_data['is_sharable']
+            request.passenger_num = form.cleaned_data['passenger_num']
+            request.destination = form.cleaned_data['destination']
+            request.special_vehicle_info = form.cleaned_data['special_vehicle_info']
+            request.arrival_time = form.cleaned_data['arrival_time']
+            request.vehicle_type = form.cleaned_data['vehicle_type']
+            request.total_passenger = request.passenger_num
+            request.save()
+            return super().form_valid(form)
 
 
 
@@ -142,12 +145,13 @@ def driver_home(request):
     :param request:
     :return:
     """
+    return redirect('ride:home')
     if request.user.plate_number:
         pass
     else:
         return redirect('ride:driver_registration')
 
-    return render(request, 'ride/')
+    return render(request, 'ride/driver_home.html')
 
 
 @login_required
@@ -161,10 +165,12 @@ def driver_view_requests(request):
     driver_vehicle = Vehicle.objects.get(plate_number=request.user.plate_number)
     open_requests_list = OwnerRequest.objects.filter(status='open',total_passenger__lte=driver_vehicle.volume)\
         .filter(vehicle_type=driver_vehicle.type)
+    clicker = 'driver'
     context = {
-        'open_requests_list': open_requests_list
+        'open_requests_list': open_requests_list,
+        'clicker': clicker
     }
-    return render(request, 'ride/driver_view_requests.html', context)
+    return render(request, 'ride/view_requests.html', context)
 
 
 @login_required
@@ -229,8 +235,6 @@ class DriverRegistrationView(LoginRequiredMixin, generic.CreateView):
 
 
 
-
-
 @login_required
 def sharer_request_search(request):
     """
@@ -245,21 +249,24 @@ def sharer_request_search(request):
         type = form.cleaned_data['vehicle_type']
         earlist_time = form.cleaned_data['earliest_time']
         latest_time = form.cleaned_data['latest_time']
-        result_list = OwnerRequest.objects.filter(destination=destination, arrival_time__range=[earlist_time, latest_time], type=type)
+        sharer_result_list = OwnerRequest.objects.filter(destination=destination, arrival_time__range=[earlist_time, latest_time], type=type)
+        clicker = 'sharer',
         context = {
-            'result_list': result_list
+            'sharer_result_list': sharer_result_list,
+            'clicker':clicker,
         }
-        return redirect()
+        return render(request,'ride/view_requests.html')
 
 
 @login_required
-def sharer_ownerrequest_detail(request):
+def sharer_ownerrequest_detail(request, request_id):
     """
-    Look
+    After search, check detail of owner request
     :param request:
     :return:
     """
     pass
+
 
 class SharerRequestDetailView(LoginRequiredMixin, generic.DetailView):
     """
@@ -270,8 +277,10 @@ class SharerRequestDetailView(LoginRequiredMixin, generic.DetailView):
     template_name = 'ride/request_detail.html'
     context_object_name = 'request'
 
+
 @login_required
-def sharer_join(request):
+def sharer_join(request, owner_request_id):
+    new_sharer_request = SharerRequest.objects.create(sharer=request.user, owner_request=OwnerRequest.objects.get(pk=owner_request_id))
     return redirect('ride:home')
 
 
