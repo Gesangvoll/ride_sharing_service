@@ -25,10 +25,13 @@ class OwnerRequest(models.Model):
 class SharerRequest(models.Model):
     sharer = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     owner_request = models.ForeignKey(OwnerRequest, on_delete=models.CASCADE)
+    destination = models.CharField(max_length=200)
     earliest_time = models.DateTimeField(blank=True, null=True)
     created_date = models.DateTimeField('Create Date', default=timezone.now)
     latest_time = models.DateTimeField(blank=True, null=True)
     passenger_num = models.IntegerField(default=1)
+    vehicle_type = models.CharField(max_length=6, choices=TYPE)
+
 
 
 class Vehicle(models.Model):

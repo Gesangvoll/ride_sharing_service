@@ -6,15 +6,23 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import OwnerRequest, SharerRequest, Vehicle
 from login.models import User
-from .forms import RequestOwnerForm, DriverRegistrationForm
+from .forms import RequestOwnerForm, DriverRegistrationForm, SharerRequestForm
 # Create your views here.
+
 
 @login_required
 def home(request):
     return render(request,'ride/home.html')
 
 
+"""
+Views for Owners
+"""
 class ViewRequests(LoginRequiredMixin, generic.ListView):
+    """
+    For all users, view their owner requests and sharer request
+    Ride Selection
+    """
     model = OwnerRequest
     template_name = 'ride/view_requests.html'
     context_object_name = 'view_requests_list'
@@ -35,6 +43,12 @@ class ViewRequests(LoginRequiredMixin, generic.ListView):
 
 @login_required
 def request_new(request):
+    """
+    To make new owner request
+    Ride Requesting
+    :param request:
+    :return:
+    """
     if request.method == 'POST':
         form = RequestOwnerForm(request.POST)
         if form.is_valid():
@@ -53,18 +67,20 @@ def request_new(request):
 
 
 class OwnerRequestDetailView(LoginRequiredMixin, generic.DetailView):
+    """
+    View Owner Request Detail
+    Ride Status Viewing(Owner)
+    """
     model = OwnerRequest
     template_name = 'ride/request_detail.html'
     context_object_name = 'request'
 
 
-class SharerRequestDetailView(LoginRequiredMixin, generic.DetailView):
-    model = SharerRequest
-    template_name = 'ride/request_detail.html'
-    context_object_name = 'request'
-
-
 class OwnerRequestEditView(LoginRequiredMixin, generic.UpdateView):
+    """
+    Edit Owner Request
+    Ride Request Editing (Owner)
+    """
     model = OwnerRequest
     template_name = 'ride/request_edit.html'
     form_class = RequestOwnerForm
@@ -90,6 +106,10 @@ class OwnerRequestEditView(LoginRequiredMixin, generic.UpdateView):
 
 
 # class SharerRequestEditView(LoginRequiredMixin, generic.UpdateView):
+#     """
+#     Edit Sharer Request
+#
+#     """
 #     model = SharerRequest
 #     template_name = 'ride/request_edit.html'
 #     form_class = RequestSharerForm
@@ -114,8 +134,14 @@ class OwnerRequestEditView(LoginRequiredMixin, generic.UpdateView):
 #             return super().form_valid(form)
 
 
+
 @login_required
 def driver_home(request):
+    """
+    Driver Home Page
+    :param request:
+    :return:
+    """
     if request.user.plate_number:
         pass
     else:
@@ -126,7 +152,15 @@ def driver_home(request):
 
 @login_required
 def driver_view_requests(request):
-    open_requests_list = OwnerRequest.objects.filter(status='open')
+    """
+    Could only view open, volume-enough, type-matching requests
+    Ride Searching (Driver)
+    :param request:
+    :return:
+    """
+    driver_vehicle = Vehicle.objects.get(plate_number=request.user.plate_number)
+    open_requests_list = OwnerRequest.objects.filter(status='open',total_passenger__lte=driver_vehicle.volume)\
+        .filter(vehicle_type=driver_vehicle.type)
     context = {
         'open_requests_list': open_requests_list
     }
@@ -135,21 +169,43 @@ def driver_view_requests(request):
 
 @login_required
 def driver_request_detail(request, request_id):
+    """
 
+    :param request:
+    :param request_id:
+    :return:
+    """
+    pass
 
 
 
 @login_required
 def confirm_request(request):
+
     pass
 
 @login_required
-def driv
+def driver_onging(request):
+    """
+    Ride Status Viewing (Driver)
+    :param request:
+    :return:
+    """
+    return
+
+@login_required
+def complete_request(request):
+    return render(request, 'ride/driver_home.html')
 
 
 
 @login_required
 def driver_registration(request):
+    """
+    Driver Registration
+    :param request:
+    :return:
+    """
     new_driver = get_object_or_404(User, pk=request.user.id)
 
     if request.method == 'POST':
@@ -168,8 +224,55 @@ def driver_registration(request):
     return render(request, 'ride/driver_home.html', {'form': form})
 
 
+class DriverRegistrationView(LoginRequiredMixin, generic.CreateView):
+    pass
+
+
+
 
 
 @login_required
 def sharer_request_search(request):
-    return render(request, 'ride/home.html')
+    """
+    Enter some requirements to search
+    Ride Searching (Sharer)
+    :param request:
+    :return:
+    """
+    if request.method == 'POST':
+        form = SharerRequestForm(request.POST)
+        destination = form.cleaned_data['destination']
+        type = form.cleaned_data['vehicle_type']
+        earlist_time = form.cleaned_data['earliest_time']
+        latest_time = form.cleaned_data['latest_time']
+        result_list = OwnerRequest.objects.filter(destination=destination, arrival_time__range=[earlist_time, latest_time], type=type)
+        context = {
+            'result_list': result_list
+        }
+        return redirect()
+
+
+@login_required
+def sharer_ownerrequest_detail(request):
+    """
+    Look
+    :param request:
+    :return:
+    """
+    pass
+
+class SharerRequestDetailView(LoginRequiredMixin, generic.DetailView):
+    """
+    Ride Status Viewing(Sharer)
+    ongoing
+    """
+    model = SharerRequest
+    template_name = 'ride/request_detail.html'
+    context_object_name = 'request'
+
+@login_required
+def sharer_join(request):
+    return redirect('ride:home')
+
+
+

@@ -6,8 +6,6 @@ from django.forms import DateTimeField
 
 
 class RequestOwnerForm(ModelForm):
-
-
     class Meta:
         model = OwnerRequest
         fields = [
@@ -16,7 +14,7 @@ class RequestOwnerForm(ModelForm):
             'vehicle_type',
             'passenger_num',
             'arrival_time',
-            'special_vehicle_info'
+            'special_vehicle_info',
         ]
 
         labels = {
@@ -25,9 +23,10 @@ class RequestOwnerForm(ModelForm):
             'passenger_num': 'How many passengers do you have?',
             'vehicle_type': 'What is your choice of vehicle type?',
             'arrival_time': 'What is your expected arrival time?',
-            'special_vehicle_info' : 'What is your special vehicle demand?',
+            'special_vehicle_info': 'What is your special vehicle demand?',
 
         }
+
 
 # class RequestSharerForm(ModelForm):
 #
@@ -56,3 +55,21 @@ class DriverRegistrationForm(ModelForm):
         }
 
 
+class SharerRequestForm(ModelForm):
+    class Meta:
+        model = SharerRequest
+        fields = [
+            'destination',
+            'vehicle_type',
+            'passenger_num',
+            'earliest_time',
+            'latest_time',
+        ]
+
+        labels = {
+            'destination': 'Enter your destination',
+            'passenger_num': 'How many passengers do you have?',
+            'vehicle_type': 'What is your choice of vehicle type?',
+            'earliest_time': 'What is your acceptable earliest time?',
+            'latest_time': "What is your acceptable latest time?",
+        }
