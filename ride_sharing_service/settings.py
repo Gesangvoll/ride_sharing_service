@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'vcm-8138.vm.duke.edu',
+    'vcm-8300.vm.duke.edu',
 ]
 
 
