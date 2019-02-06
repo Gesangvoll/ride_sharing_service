@@ -36,11 +36,21 @@
         {% endif %}
     {% endif %}
     {% if clicker == 'sharer' %}
+        <h2>Choose Ride to Join: </h2>
         {% if sharer_result_list %}
-            <h2>Choose Ride to Join: </h2>
+
             {% for request in sharer_result_list %}
-                <p><a href="{% url 'ride:sharer_ownerrequest_detail' request.id %}">{{ request.id }}</a></p>
+                {#                <form action="{% url 'ride:sharer_ownerrequest_detail' request.id %}" method="post">#}
+                {#                    {% csrf_token %}#}
+                {#                    <p>{{ request.id }}</p>#}
+                {#                    <input type="submit" value="View Detail">#}
+                {#                </form>#}
+                <p><a href="{% url 'ride:sharer_ownerrequest_detail' request.id passenger_num %}">{{ request.id }}</a></p>
             {% endfor %}
+
+        {% else %}
+            <h2>No Available Rides!</h2>
+            <p><a href="{% url 'ride:home' %}">Home</a></p>
         {% endif %}
     {% endif %}
 {% endblock %}

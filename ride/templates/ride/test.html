@@ -1,0 +1,16 @@
+{% extends 'ride/base.html' %}
+
+{% block title %}TEst {% endblock %}
+
+{% block content %}
+  Hi {{ user.username }}
+    <p><a href="{% url 'ride:view_requests'  %}">{{ plate_number }}</a></p>
+    <p><a href="{% url 'ride:request_new' %}">Request a Ride</a></p>
+    <p><a href="{% url 'ride:driver_home' %}">Driver Entrance</a></p>
+    <p><a href="{% url 'ride:sharer_search_ride' %}">Share a Ride</a></p>
+    <p><a href="{% url 'logout' %}">Logout</a></p>
+
+  <p>Welcome to CJ & XY's Ride Sharing Service!</p>
+  <a href="{% url 'login' %}">login</a> |
+  <a href="{% url 'login:signup' %}">signup</a>
+{% endblock %}

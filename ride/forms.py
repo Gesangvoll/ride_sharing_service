@@ -42,20 +42,20 @@ class DriverRegistrationForm(ModelForm):
         model = Vehicle
         fields = [
             'plate_number',
-            'type',
+            'vehicle_type',
             'volume',
             'special_vehicle_info',
         ]
 
         labels = {
             'plate_number': 'What is your plate number?',
-            'type': 'What is your vehicle type?',
+            'vehicle_type': 'What is your vehicle type?',
             'volume': 'What is your vehicle volume',
             'special_vehicle_info': 'Do you have some special info?',
         }
 
 
-class SharerRequestForm(ModelForm):
+class SharerSearchForm(ModelForm):
     class Meta:
         model = SharerRequest
         fields = [
