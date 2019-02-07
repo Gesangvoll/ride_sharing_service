@@ -11,6 +11,7 @@
             {% endfor %}
         {% else %}
             <h2>No Owner Requests Here!</h2>
+
         {% endif %}
         {% if sharer_requests_list %}
             <h2>Your Share Requests</h2>
@@ -19,8 +20,8 @@
             {% endfor %}
         {% else %}
             <h2>No Sharer Requests Here!</h2>
-            <p><a href="{% url 'ride:home' %}">Home</a></p>
         {% endif %}
+        <p><a href="{% url 'ride:home' %}">Home</a></p>
     {% endif %}
     {% if clicker == 'driver' %}
         {% if open_requests_list %}

@@ -16,7 +16,7 @@ class OwnerRequest(models.Model):
     passenger_num = models.IntegerField(default=1)
     total_passenger = models.IntegerField(default=1)
     vehicle_type = models.CharField(max_length=6, choices=TYPE, default='sedan')
-    driver = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+    driver = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     created_date = models.DateTimeField('Create Date', default=timezone.now)
     arrival_time = models.DateTimeField(blank=True, null=True, default=timezone.now())
     special_vehicle_info = models.TextField(blank=True, null=True)

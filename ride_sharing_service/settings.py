@@ -26,7 +26,8 @@ SECRET_KEY = '0=q$btft#zxq*@9l7c-3uqkzv!8hv0_+7%-1#nz=j!%ev=+p@-'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    ['web']
+    'vcm-8138.vm.duke.edu',
+    'vcm-8300.vm.duke.edu',
 ]
 
 
@@ -81,9 +82,10 @@ WSGI_APPLICATION = 'ride_sharing_service.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'hw1',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': 'db',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }

@@ -345,7 +345,6 @@ def driver_confirm_request(request, pk):
     to_confirm = get_object_or_404(OwnerRequest, pk=pk)
     driver = get_object_or_404(User, pk=request.user.id)
     if to_confirm.status == 'confirmed':
-        messages.info(request, "You are slow!")
         return redirect('ride:home')
     if driver != request.user:
         return redirect('ride:home')
@@ -361,7 +360,7 @@ def driver_confirm_request(request, pk):
     email = EmailMessage('Request Confirmed',
                          'Hi Driver,\n\nYour request {} has been confirmed.\n\nRide Sharing Service'.format(
                              to_confirm.id),
-                         to=[driver.user.email])
+                         to=[driver.email])
     email.send()
     email = EmailMessage('Request Confirmed',
                          'Dear Owner,\n\nYour request {} has been confirmed.\n\nRide Sharing Service'.format(
@@ -444,6 +443,7 @@ def driver_complete_request(request, pk):
     if to_complete.driver != request.user:
         messages.info(request, "You are fake!")
         return redirect('ride:home')
+
     to_complete.status = 'completed'
     to_complete.save()
     messages.info(request, "Ride Completed!")
@@ -513,7 +513,7 @@ class MySharerRequestDetailView(LoginRequiredMixin, generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        owner_request = SharerRequest.objects.get(pk=self.kwargs['pk']).owner_request
+        owner_request = OwnerRequest.objects.get(pk=SharerRequest.objects.get(pk=self.kwargs['pk']).sharer.id)
         if owner_request.driver is not None:
             driver = owner_request.driver
         else:
