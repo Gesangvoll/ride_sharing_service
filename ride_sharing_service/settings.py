@@ -140,3 +140,9 @@ LOGIN_URL = 'login'
 BOOTSTRAP4 = {
     'include_jquery': True,
 }
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'myuberber@gmail.com'
+EMAIL_HOST_PASSWORD = 'my_uber_password'
+EMAIL_PORT = 587

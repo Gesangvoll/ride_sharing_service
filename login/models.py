@@ -10,5 +10,6 @@ class User(AbstractUser):
     catalog = models.CharField(max_length=6, choices=ROLE, blank=True, null=True)
     plate_number = models.CharField(max_length=10, blank=True, null=True)
 
+
     def __str__(self):
         return self.username

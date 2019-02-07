@@ -16,8 +16,8 @@
         {% endif %}
         {% if sharer_requests_list %}
             <h2>Your Share Requests</h2>
-            {% for request in sharer_requests_list %}
-                <p><a href="{% url 'ride:sharer_request_detail' request.id %}">{{ request.id }}</a></p>
+            {% for share_request in sharer_requests_list %}
+                <p><a href="{% url 'ride:sharer_request_detail' share_request.id %}">{{ share_request.id }}</a></p>
             {% endfor %}
         {% else %}
             <h2>No Sharer Requests Here!</h2>

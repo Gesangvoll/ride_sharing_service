@@ -4,12 +4,12 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-{% if user.is_authenticated %}
-  Hi {{ user.username }}!
-  <p><a href="{% url 'logout' %}">logout</a></p>
-{% else %}
-  <p>Welcome to CJ & XY's Ride Sharing Service!</p>
-  <a href="{% url 'login' %}">login</a> |
-  <a href="{% url 'login:signup' %}">signup</a>
-{% endif %}
+    {% if user.is_authenticated %}
+        Hi {{ user.username }}!
+        <p><a href="{% url 'logout' %}">logout</a></p>
+    {% else %}
+        <p>Welcome to CJ & XY's Ride Sharing Service!</p>
+        <a href="{% url 'login' %}">login</a> |
+        <a href="{% url 'login:signup' %}">signup</a>
+    {% endif %}
 {% endblock %}

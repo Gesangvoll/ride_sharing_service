@@ -9,6 +9,7 @@ from login.models import User
 from .forms import RequestOwnerForm, DriverRegistrationForm, SharerSearchForm, DriverProfileEditForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
+from django.core.mail import EmailMessage
 
 
 # Create your views here.
@@ -30,20 +31,18 @@ class ViewRequests(LoginRequiredMixin, generic.ListView):
     For all users, view their owner requests and sharer request
     Ride Selection
     """
-    model = OwnerRequest
     template_name = 'ride/view_requests.html'
     context_object_name = 'view_requests_list'
 
     def get_queryset(self):
-        return OwnerRequest.objects.filter(owner__exact=self.request.user).exclude(status='completed')
-
+        return OwnerRequest.objects.filter(owner=self.request.user).exclude(status='completed')
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         clicker = 'owner'
         context.update({
-            'sharer_requests_list': SharerRequest.objects.filter(sharer__exact=self.request.user).
-                exclude(owner_request__status__exact='completed'),
-            'clicker': clicker
+            'sharer_requests_list': SharerRequest.objects.filter(sharer=self.request.user)\
+                                                                .exclude(owner_request__status='completed'),
+            'clicker': clicker,
         })
         return context
 
@@ -79,7 +78,7 @@ class OwnerRequestDetailView(LoginRequiredMixin, generic.DetailView):
     Ride Status Viewing(Owner)
     """
     model = OwnerRequest
-    template_name = 'ride/request_detail.html'
+    template_name = 'ride/to_confirm.html'
     context_object_name = 'request'
 
     def get_context_data(self, **kwargs):
@@ -302,7 +301,7 @@ def driver_view_requests(request):
 
 # @login_required
 # #pk is OwnerRequest's pk
-# def driver_request_detail(request, pk):
+# def driver_to_confirm(request, pk):
 #     """
 #     :param request:
 #     :param request_id:
@@ -318,7 +317,7 @@ class DriverRequestDetailView(LoginRequiredMixin, generic.DetailView):
     Ride Searching
     """
     model = OwnerRequest
-    template_name = 'ride/request_detail.html'
+    template_name = 'ride/to_confirm.html'
     context_object_name = 'request'
 
     def get_context_data(self, **kwargs):
@@ -344,13 +343,36 @@ class DriverRequestDetailView(LoginRequiredMixin, generic.DetailView):
 @login_required
 def driver_confirm_request(request, pk):
     to_confirm = get_object_or_404(OwnerRequest, pk=pk)
-    if to_confirm.driver is not None:
+    driver = get_object_or_404(User, pk=request.user.id)
+    if to_confirm.status == 'confirmed':
         messages.info(request, "You are slow!")
         return redirect('ride:home')
-    to_confirm.driver = request.user
+    if driver != request.user:
+        return redirect('ride:home')
+    to_confirm.driver = driver
     to_confirm.status = 'confirmed'
     to_confirm.save()
     messages.info(request, "Ride Confirmed!")
+
+    share_requests = SharerRequest.objects.filter(owner_request=to_confirm)
+
+    email = EmailMessage('Request Confirmed',
+                         'Hi Driver,\n\nYour request {} has been confirmed.\n\nRide Sharing Service'.format(
+                             to_confirm.id),
+                         to=[driver.user.email])
+    email.send()
+    email = EmailMessage('Request Confirmed',
+                         'Dear Owner,\n\nYour request {} has been confirmed.\n\nRide Sharing Service'.format(
+                             to_confirm.id),
+                         to=[to_confirm.owner.email])
+    email.send()
+    for request in share_requests:
+        email = EmailMessage('Request Confirmed',
+                             'Dear Sharer,\n\nYour request {} has been confirmed.\n\nRide Sharing Service'.format(
+                                 to_confirm.id),
+                             to=[request.sharer.email])
+        email.send()
+
     return redirect('ride:home')
 
 
@@ -467,7 +489,7 @@ class SharerOwnerRequestDetailView(LoginRequiredMixin, generic.DetailView):
     Ride Status Viewing(Owner)
     """
     model = OwnerRequest
-    template_name = 'ride/sharer_ownerrequest_detail.html'
+    template_name = 'ride/sharer_ownerto_confirm.html'
     context_object_name = 'request'
 
     def get_context_data(self, **kwargs):
@@ -484,7 +506,7 @@ class MySharerRequestDetailView(LoginRequiredMixin, generic.DetailView):
     ongoing
     """
     model = OwnerRequest
-    template_name = 'ride/request_detail.html'
+    template_name = 'ride/to_confirm.html'
     context_object_name = 'request'
 
     def get_context_data(self, **kwargs):
@@ -514,7 +536,7 @@ def sharer_join(request, owner_request_id, passenger_num):
     owner_request = OwnerRequest.objects.get(pk=owner_request_id)
     new_sharer_request = SharerRequest.objects.create(sharer=request.user,
                                                       owner_request=owner_request,
-                                                      destination=OwnerRequest.objects.get(pk=owner_request_id),
+                                                      destination=owner_request.destination,
                                                       passenger_num=passenger_num,
                                                       vehicle_type=OwnerRequest.objects.get(
                                                           pk=owner_request_id).vehicle_type)
