@@ -55,6 +55,22 @@ class DriverRegistrationForm(ModelForm):
         }
 
 
+class DriverProfileEditForm(ModelForm):
+    class Meta:
+        model = Vehicle
+        fields = [
+            'vehicle_type',
+            'volume',
+            'special_vehicle_info',
+        ]
+
+        labels = {
+            'vehicle_type': 'What is your new vehicle type?',
+            'volume': 'What is your new vehicle volume',
+            'special_vehicle_info': 'Do you have some special info?',
+        }
+
+
 class SharerSearchForm(ModelForm):
     class Meta:
         model = SharerRequest

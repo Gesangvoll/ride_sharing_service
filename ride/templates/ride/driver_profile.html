@@ -1,0 +1,18 @@
+{% extends 'ride/base.html' %}
+
+{% block content %}
+    <h1>Driver Profile</h1>
+    {% if vehicle %}
+        <ul>
+            <li><a>Your Plate Number: {{ vehicle.plate_number }}</a></li>
+            <li><a>Vehicle Type: {{ vehicle.vehicle_type }}</a></li>
+            <li><a>Volume:{{ vehicle.volume }}</a></li>
+            <li><a>Special Car Info: {{ vehicle.special_vehicle_info }}</a></li>
+            <a href="{% url 'ride:driver_profile_edit' vehicle.plate_number %}  " style="color: #888"><u>Edit</u></a>
+            <a href="{% url 'ride:driver_home' %}">Return Driver Home</a>
+        </ul>
+    {% else %}
+        <p>There is no vehicle.</p>
+        <a href="{% url 'ride:driver_home' %}">Return Driver Home</a>
+    {% endif %}
+{% endblock %}

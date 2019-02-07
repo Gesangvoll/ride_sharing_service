@@ -1,7 +1,7 @@
 {% extends 'ride/base.html' %}
 
 {% block content %}
-    <h1>Request Detail</h1>
+    <h1>Ride Detail</h1>
     {% if request %}
         <ul>
             <li><a>Creation Date: {{ request.created_date }}</a></li>
@@ -23,18 +23,8 @@
                         Number: {{ sharer_request.passenger_num }}</a></li>
                 {% endfor %}
             {% endif %}
-            {% if request.status == 'open' and clicker == 'owner' %}
-                <a href="{% url 'ride:owner_request_edit' request.id %}  " style="color: #888"><u>Edit</u></a>
-            {% endif %}
-            {% if clicker != 'driver' %}
-                <p>Your Request Could Not Be Edited At This Time!</p>
-            {% endif %}
-            {% if clicker == 'owner' or clicker == 'sharer' %}
-                <a href="{% url 'ride:view_requests' %}">Return Requests List</a>
-            {% else %}
-                <a href="{% url 'ride:driver_confirm_request' request.id %}">Driver It!</a>
-                <a href="{% url 'ride:driver_home' %}">Return Driver Home</a>
-            {% endif %}
+            <a href="{% url 'ride:driver_complete_request' request.id %}">Complete!</a>
+            <a href="{% url 'ride:driver_home' %}">Return Driver Home</a>
         </ul>
     {% else %}
         <p>There is no required order.</p>

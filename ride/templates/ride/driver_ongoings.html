@@ -1,0 +1,17 @@
+{% extends 'ride/base.html' %}
+
+{% block title %}My Ongoings{% endblock %}
+{% block extrahead %}   {# Extra Resources Start #}
+    {{ form.media }}        {# Form required JS and CSS #}
+{% endblock %}
+{% block content %}
+        {% if ongoings %}
+            <h2>My Ongoings: </h2>
+            {% for request in ongoings %}
+                <p><a href="{% url 'ride:driver_ongoing_detail' request.id %}">{{ request.id }}</a></p>
+            {% endfor %}
+        {% else %}
+            <h2>No Ongoing Rides!</h2>
+            <p><a href="{% url 'ride:driver_home' %}">Driver Home</a></p>
+        {% endif %}
+{% endblock %}

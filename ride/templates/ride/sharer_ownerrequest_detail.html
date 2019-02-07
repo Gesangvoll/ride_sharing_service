@@ -21,9 +21,9 @@
 {#       <li><a>Sharer: {{ share_request.sharer}} Passenger Number: {{share_request.passenger_num}}</a></li>#}
 {#       {% endfor %}#}
        <a href="{% url 'ride:sharer_join' request.id request.passenger_num %}  " style="color: #888" ><u>Join</u></a>
-        <a href="{% url 'ride:sharer_search_ride' %}">Return Seach</a>
+        <a href="{% url 'ride:sharer_search_ride' %}">Return Search</a>
   </ul>
   {% else %}
-    <p>There is no required order.</p>
+    <p>There is no order.</p>
   {% endif %}
 {% endblock %}

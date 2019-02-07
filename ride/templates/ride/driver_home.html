@@ -5,5 +5,7 @@
 {% block content %}
     <h2>Your plate numebr is {{ user.plate_number }}</h2>
     <p><a href="{% url 'ride:driver_view_requests' %}">Drive!</a></p>
+    <p><a href="{% url 'ride:driver_ongoings' %}">Ongoing Rides</a></p>
+    <p><a href="{% url 'ride:driver_profile' %}">Profile</a></p>
     <p><a href="{% url 'ride:home' %}">Back!</a></p>
 {% endblock %}
