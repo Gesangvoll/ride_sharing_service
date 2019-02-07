@@ -1,9 +1,7 @@
 {% extends 'ride/base.html' %}
 
 {% block title %}My Requests {% endblock %}
-{% block extrahead %}   {# Extra Resources Start #}
-    {{ form.media }}        {# Form required JS and CSS #}
-{% endblock %}
+
 {% block content %}
     {% if clicker == 'owner' %}
         {% if view_requests_list %}

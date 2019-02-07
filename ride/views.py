@@ -78,7 +78,7 @@ class OwnerRequestDetailView(LoginRequiredMixin, generic.DetailView):
     Ride Status Viewing(Owner)
     """
     model = OwnerRequest
-    template_name = 'ride/to_confirm.html'
+    template_name = 'ride/request_detail.html'
     context_object_name = 'request'
 
     def get_context_data(self, **kwargs):
@@ -317,7 +317,7 @@ class DriverRequestDetailView(LoginRequiredMixin, generic.DetailView):
     Ride Searching
     """
     model = OwnerRequest
-    template_name = 'ride/to_confirm.html'
+    template_name = 'ride/request_detail.html'
     context_object_name = 'request'
 
     def get_context_data(self, **kwargs):
@@ -348,6 +348,8 @@ def driver_confirm_request(request, pk):
         messages.info(request, "You are slow!")
         return redirect('ride:home')
     if driver != request.user:
+        return redirect('ride:home')
+    if to_confirm.driver is not None:
         return redirect('ride:home')
     to_confirm.driver = driver
     to_confirm.status = 'confirmed'
@@ -489,7 +491,7 @@ class SharerOwnerRequestDetailView(LoginRequiredMixin, generic.DetailView):
     Ride Status Viewing(Owner)
     """
     model = OwnerRequest
-    template_name = 'ride/sharer_ownerto_confirm.html'
+    template_name = 'ride/sharer_ownerrequest_detail.html'
     context_object_name = 'request'
 
     def get_context_data(self, **kwargs):

@@ -1,9 +1,7 @@
 {% extends 'ride/base.html' %}
 
 {% block title %}My Ongoings{% endblock %}
-{% block extrahead %}   {# Extra Resources Start #}
-    {{ form.media }}        {# Form required JS and CSS #}
-{% endblock %}
+
 {% block content %}
         {% if ongoings %}
             <h2>My Ongoings: </h2>
