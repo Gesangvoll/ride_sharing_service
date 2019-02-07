@@ -6,6 +6,7 @@
 {% block content %}
     {% if user.is_authenticated %}
         Hi {{ user.username }}!
+        <a href="{% url 'ride:home' %}">Home</a>
         <p><a href="{% url 'logout' %}">logout</a></p>
     {% else %}
         <p>Welcome to CJ & XY's Ride Sharing Service!</p>

@@ -1,41 +1,41 @@
-{% extends 'ride/base.html' %}
-
-{% block content %}
-    <h1>Request Detail</h1>
-    {% if request %}
-        <ul>
-            <li><a>Creation Date: {{ request.created_date }}</a></li>
-            <li><a>Ride Status: {{ request.status }}</a></li>
-            <li><a>Destination: {{ request.destination }}</a></li>
-            <li><a>Expected Arrival Time:{{ request.arrival_time }}</a></li>
-            <li><a>Vehicle Type You Chose:{{ request.vehicle_type }}</a></li>
-            <li><a>Total Passenger Number: {{ request.total_passenger }}</a></li>
-            <li><a>Passenger Number:{{ request.passenger_num }}</a></li>
-            <li><a>Special Car Info: {{ request.special_vehicle_info }}</a></li>
-            {% if driver %}
-                <li><a>Driver: {{ driver.username }}</a></li>
-                <li><a>Vehicle: {{ driver.vehicle.vehicle_type }}</a></li>
-                <li><a>Vehicle Plate Number: {{ driver.plate_number }}</a></li>
-            {% endif %}
-            {% if sharer_requests %}
-                {% for sharer_request in sharer_requests %}
-                    <li><a>Sharer: {{ sharer_request.sharer.username }} Passenger
-                        Number: {{ sharer_request.passenger_num }}</a></li>
-                {% endfor %}
-            {% endif %}
-            {% if request.status == 'open' and clicker == 'owner' %}
-                <a href="{% url 'ride:owner_request_edit' request.id %}  " style="color: #888"><u>Edit</u></a>
-            {% else %}
-                <p>Your Request Could Not Be Edited At This Time!</p>
-            {% endif %}
-            {% if clicker == 'owner' or clicker == 'sharer' %}
-                <a href="{% url 'ride:view_requests' %}">Return Requests List</a>
-            {% else %}
-                <a href="{% url 'ride:driver_confirm_request' request.id %}">Driver It!</a>
-                <a href="{% url 'ride:driver_home' %}">Return Driver Home</a>
-            {% endif %}
-        </ul>
-    {% else %}
-        <p>There is no required order.</p>
-    {% endif %}
-{% endblock %}
+{#{% extends 'ride/base.html' %}#}
+{##}
+{#{% block content %}#}
+{#    <h1>Request Detail</h1>#}
+{#    {% if request %}#}
+{#        <ul>#}
+{#            <li><a>Creation Date: {{ request.created_date }}</a></li>#}
+{#            <li><a>Ride Status: {{ request.status }}</a></li>#}
+{#            <li><a>Destination: {{ request.destination }}</a></li>#}
+{#            <li><a>Expected Arrival Time:{{ request.arrival_time }}</a></li>#}
+{#            <li><a>Vehicle Type You Chose:{{ request.vehicle_type }}</a></li>#}
+{#            <li><a>Total Passenger Number: {{ request.total_passenger }}</a></li>#}
+{#            <li><a>Passenger Number:{{ request.passenger_num }}</a></li>#}
+{#            <li><a>Special Car Info: {{ request.special_vehicle_info }}</a></li>#}
+{#            {% if driver %}#}
+{#                <li><a>Driver: {{ driver.username }}</a></li>#}
+{#                <li><a>Vehicle: {{ driver.vehicle.vehicle_type }}</a></li>#}
+{#                <li><a>Vehicle Plate Number: {{ driver.plate_number }}</a></li>#}
+{#            {% endif %}#}
+{#            {% if sharer_requests %}#}
+{#                {% for sharer_request in sharer_requests %}#}
+{#                    <li><a>Sharer: {{ sharer_request.sharer.username }} Passenger#}
+{#                        Number: {{ sharer_request.passenger_num }}</a></li>#}
+{#                {% endfor %}#}
+{#            {% endif %}#}
+{#            {% if request.status == 'open' and clicker == 'owner' %}#}
+{#                <a href="{% url 'ride:owner_request_edit' request.id %}  " style="color: #888"><u>Edit</u></a>#}
+{#            {% else %}#}
+{#                <p>Your Request Could Not Be Edited At This Time!</p>#}
+{#            {% endif %}#}
+{#            {% if clicker == 'owner' or clicker == 'sharer' %}#}
+{#                <a href="{% url 'ride:view_requests' %}">Return Requests List</a>#}
+{#            {% else %}#}
+{#                <a href="{% url 'ride:driver_confirm_request' request.id %}">Driver It!</a>#}
+{#                <a href="{% url 'ride:driver_home' %}">Return Driver Home</a>#}
+{#            {% endif %}#}
+{#        </ul>#}
+{#    {% else %}#}
+{#        <p>There is no required order.</p>#}
+{#    {% endif %}#}
+{#{% endblock %}#}

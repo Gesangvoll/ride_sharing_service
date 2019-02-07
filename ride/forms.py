@@ -22,9 +22,8 @@ class RequestOwnerForm(ModelForm):
             'destination': 'Enter your destination',
             'passenger_num': 'How many passengers do you have?',
             'vehicle_type': 'What is your choice of vehicle type?',
-            'arrival_time': 'What is your expected arrival time?',
+            'arrival_time': 'What is your expected arrival time? Please modify according to format',
             'special_vehicle_info': 'What is your special vehicle demand?',
-
         }
 
 
@@ -59,12 +58,14 @@ class DriverProfileEditForm(ModelForm):
     class Meta:
         model = Vehicle
         fields = [
+            'plate_number',
             'vehicle_type',
             'volume',
             'special_vehicle_info',
         ]
 
         labels = {
+            'plate_number': 'What is your new plate number?',
             'vehicle_type': 'What is your new vehicle type?',
             'volume': 'What is your new vehicle volume',
             'special_vehicle_info': 'Do you have some special info?',
@@ -89,3 +90,16 @@ class SharerSearchForm(ModelForm):
             'earliest_time': 'What is your acceptable earliest time?',
             'latest_time': "What is your acceptable latest time?",
         }
+
+
+class SharerEditForm(ModelForm):
+    class Meta:
+        model = SharerRequest
+        fields = [
+            'passenger_num',
+        ]
+
+        labels = {
+            'passenger_num': 'How many passengers do you have?',
+        }
+

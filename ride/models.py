@@ -34,7 +34,7 @@ class SharerRequest(models.Model):
 
 
 class Vehicle(models.Model):
-    plate_number = models.CharField(max_length=10, primary_key=True, blank=False, null=False)
+    plate_number = models.CharField(max_length=10, blank=False, null=False)
     driver = models.OneToOneField(User, on_delete=models.CASCADE, blank=False, null=False)
     volume = models.IntegerField(null=False, blank=False)
     vehicle_type = models.CharField(max_length=6, choices=TYPE, blank=False, null=False)

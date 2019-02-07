@@ -24,7 +24,9 @@
                 {% endfor %}
             {% endif %}
             {% if request.status == 'open' and clicker == 'owner' %}
-                <a href="{% url 'ride:owner_request_edit' request.id %}  " style="color: #888"><u>Edit</u></a>
+                <a href="{% url 'ride:owner_request_edit' request.id %}  " style="color: #888"><u>Edit Owner Request</u></a>
+            {% elif request.status == 'shared' and clicker == 'sharer' %}
+                <a href="{% url 'ride:sharer_request_edit' mine.id %}">Edit Share Request</a>
             {% else %}
                 <p>Your Request Could Not Be Edited At This Time!</p>
             {% endif %}

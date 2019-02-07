@@ -8,7 +8,7 @@
             <li><a>Vehicle Type: {{ vehicle.vehicle_type }}</a></li>
             <li><a>Volume:{{ vehicle.volume }}</a></li>
             <li><a>Special Car Info: {{ vehicle.special_vehicle_info }}</a></li>
-            <a href="{% url 'ride:driver_profile_edit' vehicle.plate_number %}  " style="color: #888"><u>Edit</u></a>
+            <a href="{% url 'ride:driver_profile_edit' vehicle.id %}  " style="color: #888"><u>Edit</u></a>
             <a href="{% url 'ride:driver_home' %}">Return Driver Home</a>
         </ul>
     {% else %}

@@ -7,7 +7,7 @@
         {% if view_requests_list %}
             <h2>Your Owner Requests: </h2>
             {% for request in view_requests_list %}
-                <p><a href="{% url 'ride:owner_request_detail' request.id %}">{{ request.id }}</a></p>
+                <p><a href="{% url 'ride:owner_request_detail' request.id %}">Destination: {{ request.destination }}  Expected Arrival Time: {{ request.arrival_time }}</a></p>
             {% endfor %}
         {% else %}
             <h2>No Owner Requests Here!</h2>
@@ -16,7 +16,7 @@
         {% if sharer_requests_list %}
             <h2>Your Share Requests</h2>
             {% for share_request in sharer_requests_list %}
-                <p><a href="{% url 'ride:sharer_request_detail' share_request.id %}">{{ share_request.id }}</a></p>
+                <p><a href="{% url 'ride:sharer_request_detail' share_request.id %}">Destination: {{ share_request.destination }} Expected Arrival Time: {{ share_request.owner_request.arrival_time }}</a></p>
             {% endfor %}
         {% else %}
             <h2>No Sharer Requests Here!</h2>
@@ -27,7 +27,7 @@
         {% if open_requests_list %}
             <h2>Open Requests To Drive: </h2>
             {% for request in open_requests_list %}
-                <p><a href="{% url 'ride:driver_request_detail' request.id %}">{{ request.id }}</a></p>
+                <p><a href="{% url 'ride:driver_request_detail' request.id %}">Destination: {{ request.desination }}  Expected Arrival Time: {{ request.arrival_time }} </a></p>
             {% endfor %}
         {% else %}
             <h2>No Open Rides!</h2>
@@ -44,7 +44,7 @@
                 {#                    <p>{{ request.id }}</p>#}
                 {#                    <input type="submit" value="View Detail">#}
                 {#                </form>#}
-                <p><a href="{% url 'ride:sharer_ownerrequest_detail' request.id passenger_num %}">{{ request.id }}</a></p>
+                <p><a href="{% url 'ride:sharer_ownerrequest_detail' request.id passenger_num %}">Destination: {{ request.desination }}  Expected Arrival Time: {{ request.arrival_time }}</a></p>
             {% endfor %}
 
         {% else %}

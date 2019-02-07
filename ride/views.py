@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import OwnerRequest, SharerRequest, Vehicle
 from login.models import User
-from .forms import RequestOwnerForm, DriverRegistrationForm, SharerSearchForm, DriverProfileEditForm
+from .forms import RequestOwnerForm, DriverRegistrationForm, SharerSearchForm, DriverProfileEditForm, SharerEditForm
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
 from django.core.mail import EmailMessage
@@ -17,9 +17,8 @@ from django.core.mail import EmailMessage
 
 @login_required
 def home(request):
-    request.user.plate_number = None
+    #request.user.plate_number = None
     return render(request, 'ride/home.html')
-
 
 """
 Views for Owners
@@ -65,6 +64,7 @@ def request_new(request):
             new_request.total_passenger = new_request.passenger_num
             new_request.vehicle_type = form.cleaned_data['vehicle_type']
             new_request.arrival_time = form.cleaned_data['arrival_time']
+            new_request.special_vehicle_info = form.cleaned_data['special_vehicle_info']
             new_request.save()
             return redirect('ride:home')
     else:
@@ -138,33 +138,8 @@ class OwnerRequestEditView(LoginRequiredMixin, generic.UpdateView):
             return redirect('ride:home')
 
 
-# class SharerRequestEditView(LoginRequiredMixin, generic.UpdateView):
-#     """
-#     Edit Sharer Request
-#     in view_requests
-#     """
-#     model = SharerRequest
-#     template_name = 'ride/request_edit.html'
-#     form_class = SharerForm
-#     success_url = reverse_lazy('ride:view_requests')
-#
-#     def form_invalid(self, form):
-#         print("form is invalid")
-#         return HttpResponse("form is invalid.. this is just an HttpResponse object")
-#
-#     def form_valid(self, form):
-#         pk = self.kwargs.get('pk')
-#         request = get_object_or_404(OwnerRequest, pk=pk)
-#         if request.status == 'open':
-#             # request.is_sharable = form.cleaned_data['is_sharable']
-#             # request.passenger_num = form.cleaned_data['passenger_num']
-#             # request.destination = form.cleaned_data['destination']
-#             # request.special_vehicle_info = form.cleaned_data['special_vehicle_info']
-#             # request.arrival_time = form.cleaned_data['arrival_time']
-#             # request.vehicle_type = form.cleaned_data['vehicle_type']
-#             form.instance.total_passenger = form.cleaned_data['passenger_num']
-#
-#             return super().form_valid(form)
+
+
 
 
 @login_required
@@ -198,7 +173,7 @@ def driver_registration(request):
         if form.is_valid():
             new_driver.plate_number = form.cleaned_data['plate_number']
             new_driver.save()
-            new_car = Vehicle.objects.create(pk=new_driver.plate_number,
+            new_car = Vehicle.objects.create(plate_number=new_driver.plate_number,
                                              driver=new_driver,
                                              volume=form.cleaned_data['volume'],
                                              vehicle_type=form.cleaned_data['vehicle_type'])
@@ -234,44 +209,12 @@ class DriverProfileEditView(LoginRequiredMixin, generic.UpdateView):
         return HttpResponse("form is invalid.. this is just an HttpResponse object")
 
     def form_valid(self, form):
-
+        driver = form.instance.driver
+        driver.plate_number = form.cleaned_data['plate_number']
+        driver.save()
         return super().form_valid(form)
 
 
-# @login_required
-# def ProfileEditor(request):
-#     '''
-#     Driver Info Editing
-#     '''
-#     driver_info = get_object_or_404(Driver, user=request.user)
-#     if request.method == 'POST':
-#         form = DriverUpdateForm(request.POST)
-#         if form.is_valid():
-#             driver_info.first_name = form.cleaned_data['first_name']
-#             driver_info.last_name = form.cleaned_data['last_name']
-#             driver_info.type = form.cleaned_data['type']
-#             driver_info.plate_number = form.cleaned_data['plate_number']
-#             driver_info.max_passenger = form.cleaned_data['max_passenger']
-#             driver_info.special_car_info = form.cleaned_data['special_car_info']
-#             driver_info.save()
-#             return redirect('orders:driver_profile')
-#
-#     else:
-#         first_name = driver_info.first_name
-#         last_name = driver_info.last_name
-#         type = driver_info.type
-#         plate_number = driver_info.plate_number
-#         max_passenger = driver_info.max_passenger
-#         special_car_info = driver_info.special_car_info
-#         form = DriverUpdateForm(initial={'first_name': first_name,
-#                                            'last_name': last_name,
-#                                            'type': type,
-#                                            'plate_number': plate_number,
-#                                            'max_passenger': max_passenger,
-#                                            'special_car_info': special_car_info,})
-#     context = {'form': form,
-#                'driver_info': driver_info}
-#     return render(request, 'driver/register.html', context)
 
 @login_required
 def driver_view_requests(request):
@@ -282,11 +225,11 @@ def driver_view_requests(request):
     :return:
     """
 
-    driver_vehicle = get_object_or_404(Vehicle, pk=request.user.plate_number)
+    driver_vehicle = get_object_or_404(Vehicle, plate_number=request.user.plate_number)
     driver_is_sharer = SharerRequest.objects.filter(sharer=request.user)
 
     open_requests_list = OwnerRequest.objects.filter(total_passenger__lte=driver_vehicle.volume) \
-        .filter(vehicle_type=driver_vehicle.vehicle_type) \
+        .filter(vehicle_type=driver_vehicle.vehicle_type, special_vehicle_info=driver_vehicle.special_vehicle_info) \
         .exclude(status="confirmed") \
         .exclude(status="completed") \
         .exclude(owner=request.user) \
@@ -298,17 +241,6 @@ def driver_view_requests(request):
     }
     return render(request, 'ride/view_requests.html', context)
 
-
-# @login_required
-# #pk is OwnerRequest's pk
-# def driver_to_confirm(request, pk):
-#     """
-#     :param request:
-#     :param request_id:
-#     :return:
-#     """
-#
-#     pass
 
 
 class DriverRequestDetailView(LoginRequiredMixin, generic.DetailView):
@@ -375,16 +307,6 @@ def driver_confirm_request(request, pk):
         email.send()
 
     return redirect('ride:home')
-
-
-# @login_required
-# def driver_ongings(request):
-#     """
-#     Ride Status Viewing (Driver)
-#     :param request:
-#     :return:
-#     """
-#     pass
 
 
 class DriverOngoings(LoginRequiredMixin, generic.ListView):
@@ -513,7 +435,8 @@ class MySharerRequestDetailView(LoginRequiredMixin, generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        owner_request = OwnerRequest.objects.get(pk=SharerRequest.objects.get(pk=self.kwargs['pk']).sharer.id)
+        owner_request = OwnerRequest.objects.get(pk=(SharerRequest.objects.get(pk=self.kwargs['pk']).owner_request.id))
+        mine = SharerRequest.objects.get(pk=self.kwargs['pk'])
         if owner_request.driver is not None:
             driver = owner_request.driver
         else:
@@ -527,10 +450,33 @@ class MySharerRequestDetailView(LoginRequiredMixin, generic.DetailView):
         context.update({
             'driver': driver,
             'sharer_requests': sharer_requests,
-            'clicker': clicker
+            'clicker': clicker,
+            'mine': mine
         })
 
         return context
+
+
+class SharerRequestEditView(LoginRequiredMixin, generic.UpdateView):
+    """
+    Edit Sharer Request
+    in view_requests
+    """
+    model = SharerRequest
+    template_name = 'ride/request_edit.html'
+    form_class = SharerEditForm
+    success_url = reverse_lazy('ride:view_requests')
+
+    def form_invalid(self, form):
+        print("form is invalid")
+        return HttpResponse("form is invalid.. this is just an HttpResponse object")
+
+    def form_valid(self, form):
+        owner_request = get_object_or_404(OwnerRequest, pk=form.instance.owner_request.id)
+        owner_request.total_passenger += form.cleaned_data['passenger_num'] - SharerRequest.objects.get(pk=self.kwargs['pk']).passenger_num
+        owner_request.save()
+        if owner_request.status == 'shared':
+            return super().form_valid(form)
 
 
 @login_required

@@ -6,20 +6,13 @@
   <ul>
        <li><a>Creation Date: {{request.created_date}}</a></li>
        <li><a>Ride Status: {{request.status}}</a></li>
-{#       {% if driver_info %}#}
-{#       <li><a>Driver: {{driver_info.user}}</a></li>#}
-{#       <li><a>Vehicle: {{driver_info.type}}</a></li>#}
-{#       <li><a>Vehicle Plate Number: {{driver_info.plate_number}}</a></li>#}
-{#       {% endif %}#}
        <li><a>Destination: {{request.destination}}</a></li>
            <li><a>Expected Arrival Time:{{ request.arrival_time}}</a></li>
         <li><a>Vehicle Type You Chose:{{ request.vehicle_type }}</a></li>
        <li><a>Total Passenger Number: {{request.total_passenger}}</a></li>
        <li><a>Passenger Number:{{request.passenger_num}}</a></li>
       <li><a>Special Car Info: {{request.special_vehicle_info}}</a></li>
-{#       {% for share_request in share_request%}#}
-{#       <li><a>Sharer: {{ share_request.sharer}} Passenger Number: {{share_request.passenger_num}}</a></li>#}
-{#       {% endfor %}#}
+
        <a href="{% url 'ride:sharer_join' request.id request.passenger_num %}  " style="color: #888" ><u>Join</u></a>
         <a href="{% url 'ride:sharer_search_ride' %}">Return Search</a>
   </ul>

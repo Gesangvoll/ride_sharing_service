@@ -6,7 +6,7 @@
         {% if ongoings %}
             <h2>My Ongoings: </h2>
             {% for request in ongoings %}
-                <p><a href="{% url 'ride:driver_ongoing_detail' request.id %}">{{ request.id }}</a></p>
+                <p><a href="{% url 'ride:driver_ongoing_detail' request.id %}">Destination: {{ request.desination }}  Expected Arrival Time: {{ request.arrival_time }}</a></p>
             {% endfor %}
         {% else %}
             <h2>No Ongoing Rides!</h2>
