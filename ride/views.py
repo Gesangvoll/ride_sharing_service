@@ -508,7 +508,7 @@ class MySharerRequestDetailView(LoginRequiredMixin, generic.DetailView):
     ongoing
     """
     model = OwnerRequest
-    template_name = 'ride/to_confirm.html'
+    template_name = 'ride/request_detail.html'
     context_object_name = 'request'
 
     def get_context_data(self, **kwargs):
